@@ -31,6 +31,31 @@ if($model->module_params->page_heading != "") {
 JHtml::_('bootstrap.framework');
 $document->addStyleSheet(JURI::root(true) . '/media/jui/css/icomoon.css');
 
+?>
+
+<script>
+		jQuery(document).ready(function() {
+			jQuery.fn.highlight = function (str, className) {
+				var regex = new RegExp(str, "gi");
+				return this.each(function () {
+					jQuery(this).contents().filter(function() {
+						return this.nodeType == 3 && regex.test(this.nodeValue);
+					}).replaceWith(function() {
+						return (this.nodeValue || "").replace(regex, function(match) {
+							return "<span style='background-color: #ffff00; font-weight: bold; padding: 2px 5px;' class=\"" + className + "\">" + match + "</span>";
+						});
+					});
+				});
+			};
+			<?php if(JRequest::getVar("keyword", "") != "") : ?>
+			jQuery(".blog-gsearch *").highlight("<?php echo JRequest::getVar("keyword", ""); ?>", "highlight");
+			<?php endif; ?>
+		});
+	
+</script>
+
+<?php
+
 // switch to table template
 if(JRequest::getVar("search_layout", $model->module_params->results_template) == "table") {
 	require_once(__DIR__ . '/gsearch_table.php');
